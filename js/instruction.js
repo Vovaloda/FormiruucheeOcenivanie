@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     },
-    { threshold: 0.2 }
+    { threshold: 0.01 }
   );
 
   steps.forEach((step, index) => {
-    step.style.transitionDelay = `${0.1}s`;
+    step.style.transitionDelay = `${0.01}s`;
     observer.observe(step);
   });
 
@@ -115,11 +115,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
         },
-        { threshold: 0.2 }
+        { threshold: 0.1 }
       );
 
       steps.forEach((step, index) => {
-        step.style.transitionDelay = `${index * 0.15}s`;
+        step.style.transitionDelay = `${0.001}s`;
         tabObserver.observe(step);
       });
     });
