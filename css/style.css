@@ -63,7 +63,7 @@ header nav a::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -2px;
+  bottom: 3px;
   width: 0%;
   height: 2px;
   background-color: #ffee57; /* акцентный цвет */
@@ -187,3 +187,58 @@ footer a:hover {
   transition: background 0.3s ease;
 }
 
+/* ====== Мобильная адаптация ====== */
+
+/* Гамбургер-кнопка */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Контейнер ссылок */
+.nav-links {
+  display: flex;
+  gap: 40px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- Адаптив --- */
+@media (max-width: 768px) {
+  nav {
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+
+  .menu-toggle {
+    display: block;
+    z-index: 11;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: radial-gradient(circle at center, #00c48c, #009f72);
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .nav-links.open {
+    max-height: 300px; /* можно больше, если будет много пунктов */
+    opacity: 1;
+  }
+
+  .nav-links a {
+    font-size: 18px;
+    padding: 12px;
+  }
+}

@@ -10,3 +10,12 @@ document.addEventListener("mousemove", (e) => {
   header.style.setProperty("--x", `${x}%`);
   header.style.setProperty("--y", `${y}%`);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".menu-toggle");
+  const links = document.querySelector(".nav-links");
+
+  toggle.addEventListener("click", () => {
+    links.classList.toggle("open");
+  });
+});
