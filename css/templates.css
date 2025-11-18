@@ -281,3 +281,62 @@ main::before {
     break-inside: avoid;
   }
 }
+
+.matrix-container {
+  position: relative;
+  border: 2px solid #333;
+  background: white;
+  margin: 40px 60px;
+}
+
+.matrix-y-label {
+  position: absolute;
+  left: -100px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-weight: bold;
+  color: #007a5f;
+  width: 160px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.matrix-x-label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: #007a5f;
+  width: 200px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  height: 300px;
+}
+
+.matrix-cell {
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: 10px;
+}
+
+@media print {
+  .matrix-container {
+    margin: 30px 50px;
+    break-inside: avoid;
+  }
+  
+  .matrix-y-label,
+  .matrix-x-label {
+    color: #000 !important;
+  }
+}
