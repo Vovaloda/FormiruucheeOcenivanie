@@ -194,6 +194,10 @@ main {
   animation: bg-scrolling 2s linear infinite;
 }
 
+.insert-print div {
+  page-break-inside: avoid;
+}
+
 @keyframes bg-scrolling {
   0% {
     background-position: 0 0;
@@ -230,7 +234,7 @@ main::before {
 
   .templates-container {
     gap: 1rem;
-    padding: 1rem;
+    padding: 1rem; 
   }
 
   .template-card .buttons {
@@ -255,5 +259,25 @@ main::before {
 
   h1 {
     font-size: 1.8rem;
+  }
+}
+
+@media print {
+  .hide-print {
+    display: none !important;
+  }
+
+  .print-text {
+    white-space: pre-wrap;
+    font-size: 16px;
+    padding: 4px 0;
+  }
+
+  textarea, input {
+    display: none !important;
+  }
+
+  .insert-print div {
+    break-inside: avoid;
   }
 }
