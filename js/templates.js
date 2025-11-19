@@ -90,6 +90,19 @@ document.addEventListener("DOMContentLoaded", () => {
       type: "groupPresentation",
       criteria: [""],
     },
+    {
+      title: "3.4. Самооценка совместной работы",
+      description:
+        "Формулировка развёрнутых ответов для осознания участия в групповой работе",
+      type: "selfAssessment",
+      questions: [""],
+    },
+    {
+      title: "3.5. Карта самоотчёта",
+      description: "Анализ учебного опыта с помощью простых символов",
+      type: "selfReport",
+      items: [""],
+    },
   ];
 
   const container = document.createElement("div");
@@ -179,6 +192,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (tpl.type === "groupPresentation") {
         tpl.criteria = [""];
+      }
+      if (tpl.type === "selfAssessment") {
+        tpl.questions = [""];
+      }
+      if (tpl.type === "selfReport") {
+        tpl.items = [""];
       }
     });
   }
@@ -293,6 +312,170 @@ document.addEventListener("DOMContentLoaded", () => {
           if (e.target.classList.contains("test-answer")) {
             const a = e.target.dataset.a;
             tpl.questions[i].answers[a] = e.target.value;
+          }
+        });
+
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      // ---------------------------------
+      //  🎯 Режим Карта самоотчёта
+      // ---------------------------------
+      if (tpl.type === "selfReport") {
+        modalBody.innerHTML = `
+    <h2>${tpl.title}</h2>
+    <p>${tpl.description}</p>
+
+    <div id="self-report-items"></div>
+
+    <button id="add-self-report-item" class="print-btn" style="background:#00966c">
+      Добавить строку
+    </button>
+  `;
+
+        const container = modalBody.querySelector("#self-report-items");
+
+        function renderItems() {
+          container.innerHTML = `
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: left; width: 70%;">Учебные умения и действия</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: center; width: 30%;">Оценка</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tpl.items
+            .map(
+              (item, index) => `
+            <tr class="self-report-item" data-i="${index}">
+              <td style="border: 1px solid #ddd; padding: 10px;">
+                <textarea class="self-report-text" rows="2" placeholder="Опишите учебное умение или действие..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;">${item}</textarea>
+                <div style="margin-top: 8px;">
+                  <button class="remove-self-report-item" style="background:#d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    Удалить эту строку
+                  </button>
+                </div>
+              </td>
+              <td style="border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; background: #fafafa;">
+                <!-- Пустой столбец для оценки -->
+              </td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    `;
+        }
+
+        renderItems();
+
+        modalBody
+          .querySelector("#add-self-report-item")
+          .addEventListener("click", () => {
+            tpl.items.push("");
+            renderItems();
+          });
+
+        // Удаление строки
+        modalBody.addEventListener("click", (e) => {
+          if (e.target.classList.contains("remove-self-report-item")) {
+            const i = e.target.closest(".self-report-item").dataset.i;
+            tpl.items.splice(i, 1);
+            renderItems();
+          }
+        });
+
+        // Изменение полей
+        modalBody.addEventListener("input", (e) => {
+          if (e.target.classList.contains("self-report-text")) {
+            const i = e.target.closest(".self-report-item").dataset.i;
+            tpl.items[i] = e.target.value;
+          }
+        });
+
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      // ---------------------------------
+      //  🎯 Режим Карта самоотчёта
+      // ---------------------------------
+      if (tpl.type === "selfReport") {
+        modalBody.innerHTML = `
+    <h2>${tpl.title}</h2>
+    <p>${tpl.description}</p>
+
+    <div id="self-report-items"></div>
+
+    <button id="add-self-report-item" class="print-btn" style="background:#00966c">
+      Добавить строку
+    </button>
+  `;
+
+        const container = modalBody.querySelector("#self-report-items");
+
+        function renderItems() {
+          container.innerHTML = `
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: left; width: 70%;">Учебные умения и действия</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: center; width: 30%;">Оценка</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tpl.items
+            .map(
+              (item, index) => `
+            <tr class="self-report-item" data-i="${index}">
+              <td style="border: 1px solid #ddd; padding: 10px;">
+                <textarea class="self-report-text" rows="2" placeholder="Опишите учебное умение или действие..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;">${item}</textarea>
+              </td>
+              <td style="border: 1px solid #ddd; padding: 10px; text-align: center; vertical-align: middle; background: #fafafa;">
+                <!-- Пустой столбец для оценки -->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="border: none; padding: 5px 10px;">
+                <button class="remove-self-report-item" style="background:#d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  Удалить эту строку
+                </button>
+              </td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    `;
+        }
+
+        renderItems();
+
+        modalBody
+          .querySelector("#add-self-report-item")
+          .addEventListener("click", () => {
+            tpl.items.push("");
+            renderItems();
+          });
+
+        // Удаление строки
+        modalBody.addEventListener("click", (e) => {
+          if (e.target.classList.contains("remove-self-report-item")) {
+            const i = e.target.closest(".self-report-item").dataset.i;
+            tpl.items.splice(i, 1);
+            renderItems();
+          }
+        });
+
+        // Изменение полей
+        modalBody.addEventListener("input", (e) => {
+          if (e.target.classList.contains("self-report-text")) {
+            const i = e.target.closest(".self-report-item").dataset.i;
+            tpl.items[i] = e.target.value;
           }
         });
 
@@ -1085,6 +1268,68 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (tpl.type === "selfReport") {
+        modalBody.innerHTML = `
+    <h2>${tpl.title}</h2>
+    <p>${tpl.description}</p>
+
+    <div class="example-text">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: left; width: 70%;">Учебные умения и действия</th>
+            <th style="border: 1px solid #ddd; padding: 12px; text-align: center; width: 30%;">Оценка</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tpl.items
+            .map(
+              (item, i) => `
+            <tr>
+              <td style="border: 1px solid #ddd; padding: 12px; vertical-align: top;">
+                ${item || "Учебное умение или действие"}
+              </td>
+              <td style="border: 1px solid #ddd; padding: 12px; text-align: center; vertical-align: middle; background: #fafafa;">
+                <!-- Пустой столбец -->
+              </td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      if (tpl.type === "selfAssessment") {
+        modalBody.innerHTML = `
+    <h2>${tpl.title}</h2>
+    <p>${tpl.description}</p>
+
+    <div class="example-text">
+      ${tpl.questions
+        .map(
+          (question, i) => `
+        <div style="margin-bottom: 25px;">
+          <p style="margin: 0 0 15px 0; font-size: 15px; line-height: 1.4;">
+            ${question || "Вопрос для самооценки"}
+          </p>
+          <div style="height: 150px; border: 1px dashed #757575; border-radius: 4px; background: #fafafa; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #757575; font-style: italic;"></span>
+          </div>
+        </div>
+      `
+        )
+        .join("")}
+    </div>
+  `;
+        modal.classList.remove("hidden");
+        return;
+      }
+
       if (tpl.type === "groupPresentation") {
         modalBody.innerHTML = `
     <h2>${tpl.title}</h2>
@@ -1871,6 +2116,80 @@ document.addEventListener("DOMContentLoaded", () => {
             container.remove();
           }
         );
+      }
+
+      // Специальная обработка для "Самооценка совместной работы"
+      if (currentTpl && currentTpl.type === "selfAssessment") {
+        // Создаем контейнер для всех вопросов
+        const questionsContainer = document.createElement("div");
+
+        currentTpl.questions.forEach((question, index) => {
+          const questionText = question.trim() || "Вопрос для самооценки";
+
+          const questionElement = document.createElement("div");
+          questionElement.style.marginBottom = "30px";
+          questionElement.style.paddingBottom = "20px";
+          questionElement.style.borderBottom = "1px solid #e0e0e0";
+          questionElement.innerHTML = `
+      <p style="margin: 0 0 15px 0; font-size: 15px; line-height: 1.4; color: #424242;">
+        ${questionText}
+      </p>
+      <div style="min-height: 150px; border: 1px dashed #757575; border-radius: 4px; background: #fafafa; padding: 15px;">
+        <span style="color: #757575; font-style: italic;">Напишите здесь ваш развёрнутый ответ...</span>
+      </div>
+    `;
+
+          questionsContainer.appendChild(questionElement);
+        });
+
+        // Заменяем весь контент модалки на отформатированные вопросы
+        cloned.innerHTML = `
+    <h2>${currentTpl.title}</h2>
+    <p>${currentTpl.description}</p>
+    ${questionsContainer.innerHTML}
+  `;
+      }
+
+      // Специальная обработка для "Карта самоотчёта"
+      if (currentTpl && currentTpl.type === "selfReport") {
+        // Создаем новую таблицу для печати
+        let tableContent = `
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #f5f5f5;">
+          <th style="border: 1px solid #ddd; padding: 12px; text-align: left; width: 70%;">Учебные умения и действия</th>
+          <th style="border: 1px solid #ddd; padding: 12px; text-align: center; width: 30%;">Оценка</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+        // Добавляем строки таблицы
+        currentTpl.items.forEach((item) => {
+          const itemText = item.trim() || "Учебное умение или действие";
+          tableContent += `
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 12px; vertical-align: top;">
+          ${itemText}
+        </td>
+        <td style="border: 1px solid #ddd; padding: 12px; text-align: center; vertical-align: middle; background: #fafafa;">
+          <!-- Пустой столбец для заполнения -->
+        </td>
+      </tr>
+    `;
+        });
+
+        tableContent += `
+      </tbody>
+    </table>
+  `;
+
+        // Заменяем весь контент модалки
+        cloned.innerHTML = `
+    <h2>${currentTpl.title}</h2>
+    <p>${currentTpl.description}</p>
+    ${tableContent}
+  `;
       }
 
       // Заменяем оригинальный текст на форматированный для печати
