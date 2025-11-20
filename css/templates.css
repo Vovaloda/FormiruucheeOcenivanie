@@ -12,6 +12,10 @@ h1 {
   margin-bottom: 2rem;
 }
 
+textarea{
+  resize: vertical;
+}
+
 /* Контейнер карточек */
 .templates-container {
   display: flex;
@@ -35,7 +39,7 @@ h1 {
   --bX: 50%;
   --bY: 50%;
   width: 28rem;
-  min-height: 20rem;
+  min-height: 356px;
   border-radius: 1.6rem;
     max-width: 100%;
   padding: 2rem;
@@ -227,14 +231,13 @@ main::before {
   }
 
   .template-card {
-    width: 100%;
+    width: 85vw;
     padding: 1.2rem;
     min-height: auto;
   }
 
   .templates-container {
     gap: 1rem;
-    padding: 1rem; 
   }
 
   .template-card .buttons {
