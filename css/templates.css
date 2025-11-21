@@ -6,7 +6,6 @@ body {
   text-align: center;
 }
 
-/* Заголовки */
 h1 {
   font-size: 3rem;
   margin-bottom: 2rem;
@@ -16,7 +15,6 @@ textarea{
   resize: vertical;
 }
 
-/* Контейнер карточек */
 .templates-container {
   display: flex;
   flex-wrap: wrap;
@@ -25,13 +23,11 @@ textarea{
   padding-bottom: 15px;
 }
 
-/* Обёртка для 3D эффекта */
 .wrap {
   perspective: 1000px;
   cursor: pointer;
 }
 
-/* Карточка */
 .template-card {
     box-sizing: border-box;
   --rX: 0;
@@ -45,7 +41,7 @@ textarea{
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* кнопки всегда внизу */
+  justify-content: space-between; 
   background: rgb(243, 241, 241);
   backdrop-filter: blur(12px);
   box-shadow: 0 0 3rem rgba(0,0,0,0.1);
@@ -55,7 +51,6 @@ textarea{
   position: relative;
 }
 
-/* Стиль границ/углов */
 .template-card::before,
 .template-card::after {
   content: "";
@@ -76,12 +71,10 @@ textarea{
   filter: blur(8px);
 }
 
-/* При наведении увеличиваем тень */
 .wrap:hover .template-card {
   box-shadow: 0 0 5rem rgba(0,196,138,0.3);
 }
 
-/* Кнопки */
 .template-card .buttons {
   display: flex;
   justify-content: space-between;
@@ -104,7 +97,6 @@ textarea{
   transform: translateY(-2px);
 }
 
-/* Модальное окно */
 .modal {
   position: fixed;
   inset: 0;
@@ -139,7 +131,6 @@ textarea{
   gap: 1rem;
 }
 
-/* Закрывающая кнопка */
 .close {
   position: absolute;
   top: 10px;
@@ -148,7 +139,6 @@ textarea{
   cursor: pointer;
 }
 
-/* textarea */
 .modal-body textarea.answer {
   width: 100%;
   min-height: 80px;
@@ -160,7 +150,6 @@ textarea{
   box-sizing: border-box;
 }
 
-/* Кнопка "Распечатать" */
 .print-btn {
   align-self: flex-end;
   padding: 0.8rem 1.6rem;
@@ -183,8 +172,6 @@ main {
   position: relative;
   min-height: 80vh;
   padding: 2rem;
-
-  /* Градиент вместо изображения */
   background: repeating-linear-gradient(
     45deg,
     rgba(133, 241, 211, 0.1),
@@ -194,7 +181,6 @@ main {
   );
   background-size: 50px 50px;
 
-  /* Анимация смещения градиента */
   animation: bg-scrolling 2s linear infinite;
 }
 
@@ -211,7 +197,6 @@ main {
   }
 }
 
-/* Псевдоэлемент, если нужно */
 main::before {
   content: "";
   position: absolute;

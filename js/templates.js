@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.appendChild(modal);
 
-  const modalBody = modal.querySelector(".modal-body");
+  let modalBody = modal.querySelector(".modal-body");
   const closeBtn = modal.querySelector(".close");
   const printBtn = modal.querySelector(".print-btn");
 
@@ -220,9 +220,14 @@ document.addEventListener("DOMContentLoaded", () => {
         field.value = "";
       });
 
+    // УДАЛЯЕМ ВСЕ ОБРАБОТЧИКИ СОБЫТИЙ
+    modalBody.replaceWith(modalBody.cloneNode(true));
+    modalBody = modal.querySelector(".modal-body");
+
     // Сбрасываем данные шаблонов
     resetTemplatesData();
   }
+
   // =========================
   //       EDIT — Редактирование
   // =========================
@@ -258,23 +263,17 @@ document.addEventListener("DOMContentLoaded", () => {
           container.innerHTML = tpl.questions
             .map(
               (q, index) => `
-            <div class="test-item" data-i="${index}"
-                style="padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:1rem;">
-
-              <p style="text-align: justify"><strong>Вопрос: </strong></p>
-
-              <div class="answers" style="display: flex; flex-direction: column; align-items: flex-start;">
-              <p><strong>Варианты ответов: </strong></p>
-                ${q.answers
-                  .map((ans, aIndex) => `<p>${aIndex + 1}.</p>`)
-                  .join("")}
-              </div>
-
-              <button class="remove-question" style="margin-top:10px;background:#d9534f;">
-                Удалить вопрос
-              </button>
-            </div>
-          `
+    <div class="test-item" style="padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:1rem;">
+      <p style="text-align: justify"><strong>Вопрос: </strong></p>
+      <div class="answers" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <p><strong>Варианты ответов: </strong></p>
+        ${q.answers.map((ans, aIndex) => `<p>${aIndex + 1}.</p>`).join("")}
+      </div>
+      <button class="remove-question" data-index="${index}" style="margin-top:10px;background:#d9534f;">
+        Удалить вопрос
+      </button>
+    </div>
+  `
             )
             .join("");
         }
@@ -291,29 +290,18 @@ document.addEventListener("DOMContentLoaded", () => {
             renderQuestions();
           });
 
-        // Удаление вопроса
+        // Изменение полей
         modalBody.addEventListener("click", (e) => {
           if (e.target.classList.contains("remove-question")) {
-            const i = e.target.closest(".test-item").dataset.i;
-            tpl.questions.splice(i, 1);
-            renderQuestions();
-          }
-        });
+            e.preventDefault(); // Добавляем это
+            e.stopPropagation();
 
-        // Изменение полей
-        modalBody.addEventListener("input", (e) => {
-          const block = e.target.closest(".test-item");
-          if (!block) return;
+            const i = parseInt(e.target.dataset.index);
 
-          const i = block.dataset.i;
-
-          if (e.target.classList.contains("test-question")) {
-            tpl.questions[i].question = e.target.value;
-          }
-
-          if (e.target.classList.contains("test-answer")) {
-            const a = e.target.dataset.a;
-            tpl.questions[i].answers[a] = e.target.value;
+            if (i >= 0 && i < tpl.questions.length) {
+              tpl.questions.splice(i, 1);
+              renderQuestions();
+            }
           }
         });
 
@@ -1345,9 +1333,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
     <label><strong>Вопрос для решения:</strong></label>
     <textarea class="main-question" rows="3" placeholder="Основной вопрос проблемы...">${tpl.mainQuestion}</textarea>
-    
-    <div id="training-questions">
+
+    <div id="training-questions-container" style="margin-top: 20px;">
       <label><strong>Вопросы для тренировки:</strong></label>
+      <div id="training-questions"></div>
     </div>
     
     <button id="add-training-question" class="print-btn" style="background:#00966c; margin-top: 10px;">
@@ -1358,23 +1347,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const container = modalBody.querySelector("#training-questions");
 
         function renderTrainingQuestions() {
-          const questionsHTML = tpl.trainingQuestions
+          container.innerHTML = tpl.trainingQuestions
             .map(
               (question, index) => `
-      <div class="training-item" data-i="${index}" style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
-      <span>${index + 1}.</span>
+      <div class="training-item" data-index="${index}" style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+      <span style="padding-top: 5px">${index + 1}.</span>
         <textarea class="training-question" rows="2" placeholder="Вопрос для тренировки ${
           index + 1
         }..." style="flex: 1;">${question}</textarea>
-        <button class="remove-training-question" style="background:#d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+        <button class="remove-training-question" data-index="${index}" style="background:#d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
           ✕
         </button>
       </div>
     `
             )
             .join("");
-
-          container.innerHTML = `<label><strong>Вопросы для тренировки:</strong></label>${questionsHTML}`;
         }
 
         renderTrainingQuestions();
@@ -1390,9 +1377,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // Удаление вопроса для тренировки
         modalBody.addEventListener("click", (e) => {
           if (e.target.classList.contains("remove-training-question")) {
-            const i = e.target.closest(".training-item").dataset.i;
-            tpl.trainingQuestions.splice(i, 1);
-            renderTrainingQuestions();
+            const i = parseInt(e.target.dataset.index);
+            if (i >= 0 && i < tpl.trainingQuestions.length) {
+              tpl.trainingQuestions.splice(i, 1);
+              renderTrainingQuestions();
+            }
           }
         });
 
@@ -1403,8 +1392,11 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           if (e.target.classList.contains("training-question")) {
-            const i = e.target.closest(".training-item").dataset.i;
-            tpl.trainingQuestions[i] = e.target.value;
+            const item = e.target.closest(".training-item");
+            if (item) {
+              const i = parseInt(item.dataset.index);
+              tpl.trainingQuestions[i] = e.target.value;
+            }
           }
         });
 
@@ -1449,6 +1441,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const tpl = templates[e.target.dataset.index];
 
+      // Составление тестов
       if (tpl.type === "test") {
         tpl.questions = [
           {
@@ -1488,6 +1481,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Самоотчёт
       if (tpl.type === "selfReport") {
         tpl.items = [
           "Я понял новую тему",
@@ -1530,6 +1524,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      //Самооценка
       if (tpl.type === "selfAssessment") {
         tpl.questions = [
           "Что я сделал для успеха нашей группы ?",
@@ -1562,6 +1557,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Групповая презентация
       if (tpl.type === "groupPresentation") {
         tpl.criteria = [
           "Интересно и понятно изложен материал",
@@ -1615,6 +1611,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Неоконченные предложения
       if (tpl.type === "unfinished") {
         tpl.sentences = [
           "Сегодня на уроке я узнал",
@@ -1649,6 +1646,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Перевод
       if (tpl.type === "translation") {
         tpl.concepts = [
           "Фотосинтез — это процесс образования органических веществ в растениях под воздействием солнечного света.",
@@ -1685,6 +1683,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // С позиции учителя
       if (tpl.type === "teacher") {
         tpl.topics = [
           "Названия всех четырёх времён года.",
@@ -1719,6 +1718,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Поиск ошибок
       if (tpl.type === "errorSearch") {
         tpl.tasks = ["Кошка — это насекомое, которое умеет летать."];
 
@@ -1745,6 +1745,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Опросник
       if (tpl.type === "questionnaire") {
         tpl.questions = [
           {
@@ -1854,6 +1855,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // З-Х-У
       if (tpl.type === "zhu") {
         tpl.topic = "Домашние животные";
         tpl.rows = [
@@ -1917,6 +1919,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Мозговой штурм
       if (tpl.type === "brainstorm") {
         tpl.mainQuestion =
           "Какие способы могут помочь сделать чтение сказок более интересным для всего класса?";
@@ -1951,6 +1954,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Инсерт
       if (tpl.type === "insert") {
         tpl.text = `Солнце — это звезда, которая освещает и согревает нашу планету.
 Растения используют солнечный свет для роста и производства пищи.
@@ -2011,7 +2015,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Нужно получить текущий активный шаблон
     let currentTpl = null;
 
-    // Найдем индекс текущего шаблона из data-атрибута кнопки редактирования
+    // Индекс текущего шаблона из data-атрибута кнопки редактирования
     const activeEditBtn = document.querySelector(".edit-btn.active");
     if (activeEditBtn) {
       currentTpl = templates[activeEditBtn.dataset.index];
@@ -2028,7 +2032,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Создаем клон для печати (работаем только с клоном, не трогаем оригинал)
     const cloned = modalBody.cloneNode(true);
 
-    // 1) заменяем textarea -> p
+    // Заменяем textarea -> p
     Array.from(cloned.querySelectorAll("textarea")).forEach((ta) => {
       const p = document.createElement("p");
       p.textContent = ta.value.trim() || " ";
@@ -2036,7 +2040,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ta.replaceWith(p);
     });
 
-    // 2) заменяем input -> span (для вариантов)
+    // Заменяем input -> span (для вариантов)
     Array.from(cloned.querySelectorAll("input")).forEach((inp) => {
       const span = document.createElement("div");
       span.textContent = inp.value.trim() || " ";
@@ -2044,15 +2048,15 @@ document.addEventListener("DOMContentLoaded", () => {
       inp.replaceWith(span);
     });
 
-    // 3) удаляем все кнопки
+    // Удаляем все кнопки
     Array.from(cloned.querySelectorAll("button")).forEach((btn) =>
       btn.remove()
     );
 
-    // 4) удаляем крестик закрытия
+    // Удаляем крестик закрытия
     Array.from(cloned.querySelectorAll(".close")).forEach((el) => el.remove());
 
-    // УДАЛЯЕМ ЗАГОЛОВОК "ТЕКСТ ДЛЯ АНАЛИЗА:" И "PRINT-TEXT" ДЛЯ ИНСЕРТА
+    // УДАЛЯЕМ ЗАГОЛОВОК "ТЕКСТ ДЛЯ АНАЛИЗА:" И "PRINT-TEXT" ДЛЯ ИНСЕРТА И ЕЩЁ НЕКОТОРЫЕ ДЛЯ ДРУГИХ ШАБЛОНОВ
     if (
       currentTpl &&
       (currentTpl.type === "insert" ||
@@ -2080,7 +2084,7 @@ document.addEventListener("DOMContentLoaded", () => {
         element.remove();
       });
 
-      // Также удаляем возможные родительские контейнеры
+      // Удаляем возможные родительские контейнеры
       const exampleText = cloned.querySelector(".example-text");
       if (exampleText) {
         const strongElements = exampleText.querySelectorAll("strong");
@@ -2596,7 +2600,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <body>${cloned.innerHTML}</body>
 </html>`;
 
-    // 6) Открываем новую вкладку и пишем туда
+    // Открываем новую вкладку и пишем туда
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
       alert(
@@ -2609,10 +2613,10 @@ document.addEventListener("DOMContentLoaded", () => {
     printWindow.document.write(html);
     printWindow.document.close();
 
-    // 7) Закрываем модальное окно после начала печати
+    // Закрываем модальное окно после начала печати
     closeModal();
 
-    // 8) Ждём загрузки и печатаем
+    // Загрузка и печать
     const tryPrint = () => {
       try {
         printWindow.focus();
