@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Добавляем обработчик resize для адаптивности
+  // Обработчик resize для адаптивности
   window.addEventListener("resize", () => {
     updateParallax();
   });
