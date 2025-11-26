@@ -11,20 +11,18 @@ body {
   min-height: 100vh;
 }
 
-/* ====== ШАПКА ====== */
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* явно задаем высоту */
+  height: 60px; 
   background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), #00c48c, #009f72);
   transition: background 0.2s ease;
-  padding: 12px 0; /* уменьшим padding для consistency */
+  padding: 12px 0; 
   color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
-  /* Добавляем явные правила */
   box-sizing: border-box;
   margin: 0;
   border: none;
@@ -38,7 +36,6 @@ nav {
   gap: 40px;
   position: relative;
   z-index: 2;
-  /* Явно сбрасываем отступы */
   margin: 0;
   padding: 0;
 }
@@ -57,8 +54,6 @@ nav a:hover {
   color: #ffee57;
 }
 
-/* ====== ПОДСВЕТКА ТЕКУЩЕЙ СТРАНИЦЫ ====== */
-
 header nav a::after {
   content: "";
   position: absolute;
@@ -66,7 +61,7 @@ header nav a::after {
   bottom: 3px;
   width: 0%;
   height: 2px;
-  background-color: #ffee57; /* акцентный цвет */
+  background-color: #ffee57;
   transition: width 0.3s ease;
 }
 
@@ -86,7 +81,6 @@ header nav a.active::after {
   width: 100%;
 }
 
-/* ====== Основной контент ====== */
 main {
   margin-top: 60px;
   flex: 1;
@@ -109,7 +103,6 @@ main p {
   max-width: 800px;
 }
 
-/* ====== Кнопки ====== */
 a.button {
   background-color: #00b686;
   color: white;
@@ -128,7 +121,6 @@ a.button:hover {
   background-color: #009f72;
 }
 
-/* ====== Футер ====== */
 footer {
   background-color: #f8f9fa;
   color: #555;
@@ -146,7 +138,6 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* ====== АНИМАЦИЯ ПЕРЕХОДОВ ====== */
 .fade-wrapper {
   opacity: 0;
   transform: translateY(10px);
@@ -164,7 +155,6 @@ footer a:hover {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* ====== Аккордеон FAQ ====== */
 .accordion {
   width: 100%;
   max-width: 800px;
@@ -187,9 +177,6 @@ footer a:hover {
   transition: background 0.3s ease;
 }
 
-/* ====== Мобильная адаптация ====== */
-
-/* Гамбургер-кнопка */
 .menu-toggle {
   display: none;
   background: none;
@@ -199,14 +186,12 @@ footer a:hover {
   cursor: pointer;
 }
 
-/* Контейнер ссылок */
 .nav-links {
   display: flex;
   gap: 40px;
   transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
-/* --- Адаптив --- */
 @media (max-width: 768px) {
   nav {
     justify-content: space-between;
@@ -233,7 +218,7 @@ footer a:hover {
   }
 
   .nav-links.open {
-    max-height: 300px; /* можно больше, если будет много пунктов */
+    max-height: 300px;
     opacity: 1;
   }
 
